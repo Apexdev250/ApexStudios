@@ -1,0 +1,127 @@
+{
+  "name": "apex-studios",
+  "description": "AI-powered creative studio for image, video, cinema and lip sync generation",
+  "homepage": "https://github.com/Apexdev250/ApexStudios",
+  "private": true,
+  "version": "1.0.10",
+  "workspaces": [
+    "packages/studio",
+    "packages/Vibe-Workflow/packages/workflow-builder",
+    "packages/Open-Poe-AI/packages/agents"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build:studio": "npm run build -w studio",
+    "build:workflow": "npm run build -w workflow-builder",
+    "build:agent": "npm run build -w ai-agent",
+    "build:packages": "npm run build:workflow && npm run build:agent && npm run build:studio",
+    "setup": "git submodule update --init --recursive && npm install && npm run build:packages",
+    "vite:dev": "vite",
+    "vite:build": "vite build",
+    "electron:dev": "npm run vite:build && electron .",
+    "electron:build": "vite build && electron-builder --mac",
+    "electron:build:win": "vite build && electron-builder --win",
+    "electron:build:linux": "vite build && electron-builder --linux",
+    "electron:build:all": "vite build && electron-builder --mac --win --linux"
+  },
+  "build": {
+    "appId": "ai.generative.open",
+    "productName": "ApexStudios",
+    "copyright": "Copyright © 2025",
+    "directories": {
+      "output": "release"
+    },
+    "afterPack": "./afterPack.js",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.graphics-design",
+      "icon": "public/banner.png",
+      "gatekeeperAssess": false,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "public/banner.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "include": "build/installer.nsh"
+    },
+    "linux": {
+      "icon": "public/banner.png",
+      "category": "Utility",
+      "maintainer": "ApexStudios Team",
+      "extraFiles": [
+        {
+          "from": "build/linux/apparmor.profile",
+          "to": "resources/apparmor.profile"
+        }
+      ],
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "ai-agent": "file:./packages/Open-Poe-AI/packages/agents",
+    "axios": "^1.7.0",
+    "critters": "^0.0.23",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.4.1",
+    "react-toastify": "^11.1.0",
+    "reactflow": "^11.11.4",
+    "studio": "workspace:*",
+    "workflow-builder": "file:packages/Vibe-Workflow/packages/workflow-builder"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/vite": "^4.1.18",
+    "autoprefixer": "^10.4.24",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9",
+    "eslint-config-next": "^15.0.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0",
+    "turbopack": "^0.0.1",
+    "vite": "^5.4.21",
+    "vitest": "^4.1.7"
+  },
+  "main": "electron/main.js"
+}
