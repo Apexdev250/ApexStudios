@@ -218,7 +218,7 @@ async function pollForResult(requestId, key, maxAttempts = 900, interval = 2000)
   throw new Error('Generation timed out after polling.');
 }
 
-function getAlibabaSize(aspectRatio = '16:9') {
+export function getAlibabaSize(aspectRatio = '16:9') {
   const sizes = {
     '1:1': '1024*1024',
     '16:9': '1280*720',
@@ -229,7 +229,7 @@ function getAlibabaSize(aspectRatio = '16:9') {
   return sizes[aspectRatio] || sizes['16:9'];
 }
 
-function extractAlibabaOutput(data) {
+export function extractAlibabaOutput(data) {
   const output = data?.output || data;
   const results = output?.results || output?.result || [];
   const first = Array.isArray(results) ? results[0] : results;
@@ -345,7 +345,7 @@ export async function generateImage(apiKey, params) {
 }
 
 export async function generateI2I(apiKey, params) {
-  const modelInfo = getI2IModelById(params.model);
+  const modelInfo = getI2IModelById(params.model) || params.modelInfo;
   const endpoint = modelInfo?.endpoint || params.model;
   const payload = {};
   if (params.prompt) payload.prompt = params.prompt;
@@ -440,7 +440,7 @@ export async function generateMarketingStudioAd(apiKey, params) {
 }
 
 export async function processLipSync(apiKey, params) {
-  const modelInfo = getLipSyncModelById(params.model);
+  const modelInfo = getLipSyncModelById(params.model) || params.modelInfo;
   const endpoint = modelInfo?.endpoint || params.model;
   const payload = {};
   if (params.audio_url) payload.audio_url = params.audio_url;
